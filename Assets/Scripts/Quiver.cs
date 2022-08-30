@@ -16,13 +16,13 @@ public class Quiver : XRBaseInteractable
 
     public void OnArrowGrab(SelectEnterEventArgs args)
     {
-        Debug.Log("Arrow grabbed");
         if(enabling)
         {
             enabling = false;
         } else
         {
             GameObject arrow = Instantiate(arrowPrefab, args.interactorObject.transform.position, args.interactorObject.transform.rotation);
+            enabling = true;
             interactionManager.SelectEnter(args.interactorObject, arrow.GetComponent<XRBaseInteractable>());
         }
     }
