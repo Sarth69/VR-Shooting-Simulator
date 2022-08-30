@@ -27,10 +27,21 @@ public class Arrow : XRGrabInteractable
     {
         base.OnSelectEntering(args);
 
-        launched = false;
         arrowCollider.isTrigger = false;
         arrowRigidbody.isKinematic = false;
         arrowRigidbody.useGravity = true;
+        launched = false;
+    }
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+
+        if (!launched)
+        {
+            arrowRigidbody.useGravity = true;
+            arrowRigidbody.isKinematic = false;
+        }
     }
 
     private void ShootArrow(float pullStrengh)
@@ -38,7 +49,6 @@ public class Arrow : XRGrabInteractable
         if(pullStrengh > 0)
         {
             arrowRigidbody.AddForce(-transform.up.normalized * pullStrengh * shootStrenghtFactor, ForceMode.Impulse);
-            Debug.Log(transform.up);
             launched = true;
             arrowCollider.isTrigger = true;
         }
@@ -59,6 +69,7 @@ public class Arrow : XRGrabInteractable
 
         if (updatePhase == XRInteractionUpdateOrder.UpdatePhase.Dynamic)
         {
+            Debug.Log(launched);
             if (launched)
             {
                 CheckForHit();
@@ -69,12 +80,13 @@ public class Arrow : XRGrabInteractable
 
     private void CheckForHit()
     {
-        if (Physics.Linecast(lastPosition, tip.position, out RaycastHit hit, layermask) && hit.transform.gameObject.layer == 8)
+        if (Physics.Linecast(lastPosition, tip.position, out RaycastHit hit, layermask) && hit.transform.gameObject.layer == 8 && launched)
         {
             // Remove physics and attach the arrow to the target
             arrowRigidbody.useGravity = false;
             arrowRigidbody.isKinematic = true;
             transform.SetParent(hit.transform);
+            launched = false;
         }
     }
 }
