@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 public class BowSocket : XRSocketInteractor
 {
-    /*public PullMeasurer PullMeasurer { get; private set; } = null;*/
     public bool IsReady { get; private set; } = false;
 
     public GameObject rope;
@@ -34,6 +33,7 @@ public class BowSocket : XRSocketInteractor
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
+        // Change the rope by the line renderer
         base.OnSelectEntered(args);
 
         rope.SetActive(false);
@@ -42,6 +42,7 @@ public class BowSocket : XRSocketInteractor
 
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
+        // Reactivate the still rope
         base.OnSelectExited(args);
 
         rope.SetActive(true);
@@ -89,6 +90,7 @@ public class BowSocket : XRSocketInteractor
 
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
+        // Make the bow catch the arrow automaticaly when it approaches the rope, without needing the user to release the trigger
         base.OnHoverEntered(args);
 
         if (CanHover(args.interactableObject) && IsReady)
