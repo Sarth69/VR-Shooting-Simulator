@@ -7,6 +7,9 @@ public class CustomInteractionManager : XRInteractionManager
 {
     public void ForceExit(XRBaseInteractor interactor)
     {
-        SelectExit(interactor, interactor.firstInteractableSelected);
+        if (interactor.firstInteractableSelected != null)
+        {
+            SelectExit(interactor, interactor.firstInteractableSelected);
+        }
     }
 }

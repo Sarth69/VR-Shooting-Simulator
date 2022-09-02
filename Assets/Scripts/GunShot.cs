@@ -16,6 +16,6 @@ public class GunShot : XRGrabInteractable
 
     private void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, attach.position, attach.rotation);
+        Instantiate(bulletPrefab, attach.position, attach.rotation);
     }
 }

@@ -13,6 +13,7 @@ public class Arrow : XRGrabInteractable
     private BoxCollider arrowCollider;
     private bool launched = false;
     private Vector3 lastPosition;
+    private GameObject trail;
 
     protected override void OnEnable()
     {
@@ -69,7 +70,6 @@ public class Arrow : XRGrabInteractable
 
         if (updatePhase == XRInteractionUpdateOrder.UpdatePhase.Dynamic)
         {
-            Debug.Log(launched);
             if (launched)
             {
                 CheckForHit();
@@ -82,10 +82,19 @@ public class Arrow : XRGrabInteractable
     {
         if (Physics.Linecast(lastPosition, tip.position, out RaycastHit hit, layermask) && hit.transform.gameObject.layer == 8 && launched)
         {
-            // Remove physics and attach the arrow to the target
+            Debug.Log("CheckForHit");
             arrowRigidbody.useGravity = false;
             arrowRigidbody.isKinematic = true;
             transform.SetParent(hit.transform);
+            // Remove physics and attach the arrow to the target
+            if (hit.transform.gameObject.GetComponent<Target>() != null)
+            {
+                hit.transform.gameObject.GetComponent<Target>().targetHit();
+            }
+            else if (hit.transform.gameObject.GetComponentInParent<Target>())
+            {
+                hit.transform.gameObject.GetComponentInParent<Target>().targetHit();
+            }
             launched = false;
         }
     }

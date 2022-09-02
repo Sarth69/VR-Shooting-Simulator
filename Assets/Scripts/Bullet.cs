@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private BoxCollider bulletCollider;
     private Rigidbody bulletRigidbody;
     private Vector3 lastPosition;
     public Transform tip;
@@ -14,7 +11,6 @@ public class Bullet : MonoBehaviour
 
     private void OnEnable()
     {
-        bulletCollider = GetComponent<BoxCollider>();
         bulletRigidbody = GetComponent<Rigidbody>();
         lastPosition = tip.position;
     }
@@ -34,9 +30,17 @@ public class Bullet : MonoBehaviour
         if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hit, layermask))
         {
             // Launch explosion and delete the bullet
+            if (hit.transform.gameObject.GetComponent<Target>() != null)
+            {
+                hit.transform.gameObject.GetComponent<Target>().targetHit();
+            } else if (hit.transform.gameObject.GetComponentInParent<Target>())
+            {
+                hit.transform.gameObject.GetComponentInParent<Target>().targetHit();
+            }
+            explosion.transform.SetParent(transform.parent);
             explosion.transform.position = hit.point;
             explosion.Play();
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 }
