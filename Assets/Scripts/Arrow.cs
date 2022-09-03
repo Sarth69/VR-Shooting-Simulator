@@ -8,17 +8,19 @@ public class Arrow : XRGrabInteractable
     [Header("Arrow Shoot Data")]
     public float shootStrenghtFactor;
     public Transform tip;
+    public AudioClip arrowAudio;
     public LayerMask layermask = -Physics.IgnoreRaycastLayer;
     private Rigidbody arrowRigidbody;
     private BoxCollider arrowCollider;
     private bool launched = false;
     private Vector3 lastPosition;
-    private GameObject trail;
+    private AudioSource audioSource;
 
     protected override void OnEnable()
     {
         base.OnEnable();
         Pull.Shooted.AddListener(ShootArrow);
+        audioSource = GetComponent<AudioSource>();
         arrowRigidbody = GetComponent<Rigidbody>();
         arrowCollider = GetComponent<BoxCollider>();
         lastPosition = tip.position;
@@ -49,6 +51,7 @@ public class Arrow : XRGrabInteractable
     {
         if(pullStrengh > 0)
         {
+            audioSource.PlayOneShot(arrowAudio);
             arrowRigidbody.AddForce(-transform.up.normalized * pullStrengh * shootStrenghtFactor, ForceMode.Impulse);
             launched = true;
             arrowCollider.isTrigger = true;

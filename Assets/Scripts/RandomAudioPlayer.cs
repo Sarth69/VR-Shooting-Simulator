@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomAudioPlayer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    AudioSource m_MyAudioSource;
+
+    public void Start()
     {
-        
+        m_MyAudioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void playRandomAudio(AudioClip[] clips)
     {
-        
+        m_MyAudioSource.PlayOneShot(clips[Random.Range(0, clips.Length)]);
     }
 }
